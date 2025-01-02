@@ -1,52 +1,67 @@
 /* eslint-disable prettier/prettier */
 import { Test, TestingModule } from '@nestjs/testing';
-import { QueryPaginationDto } from 'src/dtos/QueryPaginationDto';
-import { ProductController } from 'src/product/product.controller';
+import { BadRequestException } from '@nestjs/common';
+import { ProductRepository } from 'src/product/product.repository';
 import { ProductService } from 'src/product/product.service';
 
-describe('ProductController', () => {
-  let controller: ProductController;
+describe('ProductService', () => {
   let service: ProductService;
-
-  const mockService = {
-    getAllProducts: jest.fn(),
-  };
+  let repository: ProductRepository;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
-      controllers: [ProductController],
-      providers: [{ provide: ProductService, useValue: mockService }],
+      providers: [
+        ProductService,
+        {
+          provide: ProductRepository,
+          useValue: {
+            getTopProducts: jest.fn(),
+            findAllPaginated: jest.fn(),
+          },
+        },
+      ],
     }).compile();
 
-    controller = module.get<ProductController>(ProductController);
     service = module.get<ProductService>(ProductService);
+    repository = module.get<ProductRepository>(ProductRepository);
   });
 
-  it('should be defined', () => {
-    expect(controller).toBeDefined();
+  it('should throw BadRequestException if area is invalid (too short)', async () => {
+    const invalidArea = 'A'; // Area too short
+    await expect(service.getTopProductsByArea(invalidArea)).rejects.toThrow(
+      new BadRequestException(
+        'Invalid area value. The area must be a non-empty string between 2 and 10 characters.',
+      ),
+    );
   });
 
-  describe('getAllProducts', () => {
-    it('should call service and return paginated products', async () => {
-      const query: QueryPaginationDto = { page: '1', size: '5' };
-      const paginatedOutput = {
-        data: [{ id: 1, name: 'Product 1' }],
-        meta: {
-          total: 1,
-          lastPage: 1,
-          currentPage: 1,
-          totalPerPage: 5,
-          prevPage: null,
-          nextPage: null,
-        },
-      };
+  it('should throw BadRequestException if area is invalid (too long)', async () => {
+    const invalidArea = 'TooLongArea'; // Area too long
+    await expect(service.getTopProductsByArea(invalidArea)).rejects.toThrow(
+      new BadRequestException(
+        'Invalid area value. The area must be a non-empty string between 2 and 10 characters.',
+      ),
+    );
+  });
 
-      mockService.getAllProducts.mockResolvedValue(paginatedOutput);
+  it('should throw BadRequestException if area is empty', async () => {
+    const invalidArea = ''; // Empty area
+    await expect(service.getTopProductsByArea(invalidArea)).rejects.toThrow(
+      new BadRequestException(
+        'Invalid area value. The area must be a non-empty string between 2 and 10 characters.',
+      ),
+    );
+  });
 
-      const result = await controller.getAllProducts(query);
+  it('should return top products if area is valid', async () => {
+    const validArea = 'validArea';
+    const topProducts = [
+      { id: 1, name: 'Product 1' },
+      { id: 2, name: 'Product 2' },
+    ];
+    repository.getTopProducts = jest.fn().mockResolvedValue(topProducts);
 
-      expect(service.getAllProducts).toHaveBeenCalledWith(query);
-      expect(result).toEqual(paginatedOutput);
-    });
+    const result = await service.getTopProductsByArea(validArea);
+    expect(result).toEqual(topProducts);
   });
 });

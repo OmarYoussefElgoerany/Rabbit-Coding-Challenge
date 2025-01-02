@@ -7,6 +7,7 @@ import {
   paginate,
   paginateOutput,
 } from 'src/utils/pagination.utils';
+import { TopProductsDto } from './dto/top-products.dto';
 
 @Injectable()
 export class ProductRepository {
@@ -21,16 +22,30 @@ export class ProductRepository {
       }),
       await this.prisma.product.count(),
     ]);
-    console.log("in  serviceee repooooooo");
     return paginateOutput<ProductDto>(products, total, query);
   }
-  async findById(id: number): Promise<ProductDto | null> {
-    return this.prisma.product.findUnique({
-      where: { id },
-    });
-  }
-
-  async create(data: ProductDto): Promise<ProductDto> {
-    return this.prisma.product.create({ data });
+  // async findById(id: number): Promise<ProductDto | null> {
+  //   return this.prisma.product.findUnique({
+  //     where: { id },
+  //   });
+  // }
+  async getTopProducts(area: string) {
+    return await this.prisma.$queryRaw<TopProductsDto[]>`
+          SELECT 
+            p.id, 
+            p.name, 
+            p.category
+          FROM 
+            "Product" p
+          JOIN 
+            "OrderItem" oi ON p.id = oi."productId"
+          WHERE 
+            p.area = ${area}
+          GROUP BY 
+            p.id, p.name, p.category
+          ORDER BY 
+            SUM(oi.quantity) DESC
+          LIMIT 10;
+        `;
   }
 }

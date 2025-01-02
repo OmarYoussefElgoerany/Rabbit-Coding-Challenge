@@ -19,12 +19,17 @@ Ensured proper error handling, validation, and edge cases were accounted for in 
 
 Additional Optimizations I Would Consider (If Given More Time):
 Caching:
-Implement caching mechanisms (e.g., Redis) to store the results of frequently accessed data, like the top 10 most frequently ordered products, reducing the load on the database.
-Database Indexing:
+Implement caching mechanisms (e.g., Redis) to store the results of frequently accessed data, such as the top 10 most frequently ordered products, thereby reducing the load on the database.
 
-Add relevant indexes on the database, especially for frequently queried fields like  area to speed up query performance.
+Database Indexing:
+Add relevant indexes to the database, especially for frequently queried fields like area, to speed up query performance.
 Implement composite indexes if multiple fields are being queried simultaneously to reduce the time spent on searches.
+
 Database Query Optimization:
 Optimize database queries by avoiding SELECT * and instead selecting only the necessary fields to reduce overhead.
-Also If i have more time i will make integration with any notification library.
 
+Notification Integration (If Given More Time):
+If I had more time, I would integrate a notification library to send notifications to users when new orders are placed.
+
+Structured and Detailed Response:
+I would ensure that all responses, especially API responses, are well-structured and include detailed information to make it easier for consumers to understand and use the data.

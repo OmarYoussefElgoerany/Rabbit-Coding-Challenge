@@ -1,9 +1,9 @@
 
 ##Documentation
-1. Top 10 Most Frequently Ordered Products API
-Description: Developed an API that returns the top 10 most frequently ordered products in a specific area. This area can be identified based on the user's location or region.
+1. Top 10 Most Frequently Ordered Products API:
+Developed an API that returns the top 10 most frequently ordered products in a specific area. This area can be identified based on the user's location or region.
 Ensured the API could handle millions of requests efficiently, optimizing it for high traffic environments.
-2. Optimizing a Poorly Implemented List Products API
+2. Optimizing a Poorly Implemented List Products API:
 Optimized an existing /products API that suffered from poor performance due to inefficient database queries and bad coding practices.
 Key Actions:
 Conducted a thorough review of the API’s implementation, identifying bottlenecks and areas for improvement.

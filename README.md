@@ -14,6 +14,9 @@ Key Features:
 Implemented unit tests for both the top products API and the optimized list products API.
 Ensured proper error handling, validation, and edge cases were accounted for in the tests.
 
+
+
+
 Additional Optimizations I Would Consider (If Given More Time):
 Caching:
 Implement caching mechanisms (e.g., Redis) to store the results of frequently accessed data, like the top 10 most frequently ordered products, reducing the load on the database.
@@ -23,4 +26,5 @@ Add relevant indexes on the database, especially for frequently queried fields l
 Implement composite indexes if multiple fields are being queried simultaneously to reduce the time spent on searches.
 Database Query Optimization:
 Optimize database queries by avoiding SELECT * and instead selecting only the necessary fields to reduce overhead.
+Also If i have more time i will make integration with any notification library.
 
